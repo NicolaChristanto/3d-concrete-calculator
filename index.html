@@ -923,8 +923,8 @@
             {
                 name: "Win Sun",
                 options: [
-                    { label: "Hourly Rental (24h)", rate: 148625, unit: "hour" },
-                    { label: "8-Hour Rental", rate: 3567000 / 8, unit: "8-hour" }, // Daily rate / 8 hours
+                    { label: "Hourly Rental (24h)", rate: 148625, unit: "hour" }, // This is hourly rate, multiplied by 24 in calculatePrinterCost
+                    { label: "8-Hour Rental", rate: 3567000 / 3, unit: "8-hour" }, // Corrected: 1/3 of Daily Rental
                     { label: "Daily Rental", rate: 3567000, unit: "day" },
                     { label: "Monthly Rental", rate: 108520000, unit: "month" },
                     { label: "Yearly Rental", rate: 1302240000, unit: "year" },
@@ -935,7 +935,7 @@
                 name: "GearBuild",
                 options: [
                     { label: "Hourly Rental (24h)", rate: 64057, unit: "hour" },
-                    { label: "8-Hour Rental", rate: 1537367 / 8, unit: "8-hour" },
+                    { label: "8-Hour Rental", rate: 1537367 / 3, unit: "8-hour" }, // Corrected: 1/3 of Daily Rental
                     { label: "Daily Rental", rate: 1537367, unit: "day" }, 
                     { label: "Monthly Rental", rate: 46121000, unit: "month" },
                     { label: "Yearly Rental", rate: 553425000, unit: "year" },
@@ -946,7 +946,7 @@
                 name: "SJ",
                 options: [
                     { label: "Hourly Rental (24h)", rate: 29732, unit: "hour" },
-                    { label: "8-Hour Rental", rate: 713556 / 8, unit: "8-hour" },
+                    { label: "8-Hour Rental", rate: 713556 / 3, unit: "8-hour" }, // Corrected: 1/3 of Daily Rental
                     { label: "Daily Rental", rate: 713556, unit: "day" },
                     { label: "Monthly Rental", rate: 21704000, unit: "month" },
                     { label: "Yearly Rental", rate: 260448000, unit: "year" },
@@ -1032,9 +1032,10 @@
                 const unit = selectedPrinterOption.unit;
                 printerDescription = `${selectedPrinter.name} - ${selectedPrinterOption.label}`;
 
-                if (unit === "day" || unit === "hour" || unit === "8-hour") { 
-                    // For daily, 24h hourly, and 8h hourly options, treat 'rate' as the daily cost of that option
+                if (unit === "day" || unit === "8-hour") { // For Daily Rental or 8-Hour Rental
                     printerCost = rate * project_duration;
+                } else if (unit === "hour") { // For Hourly Rental (24h)
+                    printerCost = rate * project_duration * 24; 
                 } else if (unit === "month") {
                     printerCost = rate * (Math.ceil(project_duration / 30)); 
                 } else if (unit === "year") {
